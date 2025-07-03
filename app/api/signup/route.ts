@@ -6,9 +6,9 @@ import { NextRequest, NextResponse } from "next/server";
 export async function POST(req: NextRequest) {
   try {
     const body = await req.json();
-
     const parsedData = signupSchema.parse(body);
-    const { name, email, password } = parsedData;
+
+    const { firstName, lastName = "", email, password } = parsedData;
 
     const existingUser = await prisma.admin.findUnique({
       where: { email },
@@ -16,21 +16,23 @@ export async function POST(req: NextRequest) {
 
     if (existingUser) {
       return NextResponse.json(
-        { message: "Account already Exist" },
-        { status: 400 }
+        {
+          message: "Account already exist",
+        },
+        { status: 409 }
       );
     }
 
-    const hashedPassword = await hash(password, 12);
+    const hashPassword = await hash(password, 12);
 
     const admin = await prisma.admin.create({
       data: {
-        name,
+        firstName,
+        lastName,
         email,
-        password: hashedPassword,
+        password: hashPassword,
       },
     });
-
 
     return NextResponse.json(
       {
@@ -41,10 +43,10 @@ export async function POST(req: NextRequest) {
       }
     );
   } catch (error) {
-    console.error("Signup Error", error);
+    console.log("signup error ", error);
     return NextResponse.json(
       {
-        message: "Something went wrong",
+        message: "something went wrong",
       },
       {
         status: 500,

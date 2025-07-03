@@ -9,6 +9,7 @@ import { Label } from "@/components/ui/label"
 import { useForm } from "react-hook-form"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { signupSchema} from "@/lib/validation"
+import { redirect } from "next/navigation"
 
 type formData = z.infer<typeof signupSchema>
 
@@ -20,14 +21,31 @@ export function SignupForm({
   const {
     register,
     handleSubmit,
-    formState: { errors },
+    formState: { errors, isSubmitting },
+    setError
   } = useForm<formData>({
     resolver: zodResolver(signupSchema)
   })
 
-  const onSubmit = (data: formData) => {
-    const response = await fetch('/api/')
+  const onSubmit = async (data: formData) => {
+    const response = await fetch('/api/signup', {
+      method: "POST",
+      headers: { "content-type": "application/json" },
+      body: JSON.stringify(data)
+    })
+
+    if(response.ok){
+      redirect('/signin')
+    }else{
+      if(response.status === 409){
+        setError('email', {message: "Account already exist"})
+      }
+    }
   };
+
+  
+
+
 
   return (
     <div className={cn("flex flex-col gap-6", className)} {...props}>
@@ -80,7 +98,7 @@ export function SignupForm({
                 {errors.password && <p className="text-red-400 text-xs" >{errors.password.message}</p>}
               </div>
               <Button type="submit" className="w-full cursor-pointer">
-                Sign up
+                {isSubmitting ? 'Submitting' : 'Sign up'}
               </Button>
               <div className="after:border-border relative text-center text-sm after:absolute after:inset-0 after:top-1/2 after:z-0 after:flex after:items-center after:border-t">
                 <span className="bg-card text-muted-foreground relative z-10 px-2">
@@ -137,6 +155,7 @@ export function SignupForm({
         By clicking continue, you agree to our <a href="#">Terms of Service</a>{" "}
         and <a href="#">Privacy Policy</a>.
       </div>
+      
     </div>
   )
 }
