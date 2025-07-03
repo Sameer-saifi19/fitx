@@ -1,18 +1,39 @@
+'use client'
+
 import { cn } from "@/lib/utils"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent } from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
+import { z } from "zod"
 import { Label } from "@/components/ui/label"
+import { useForm } from "react-hook-form"
+import { zodResolver } from "@hookform/resolvers/zod"
+import { signupSchema} from "@/lib/validation"
+
+type formData = z.infer<typeof signupSchema>
 
 export function SignupForm({
   className,
   ...props
 }: React.ComponentProps<"div">) {
+
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm<formData>({
+    resolver: zodResolver(signupSchema)
+  })
+
+  const onSubmit = (data: formData) => {
+    const response = await fetch('/api/')
+  };
+
   return (
     <div className={cn("flex flex-col gap-6", className)} {...props}>
       <Card className="overflow-hidden p-0">
         <CardContent className="grid p-0 md:grid-cols-2">
-          <form className="p-6 md:p-8">
+          <form className="p-6 md:p-8" onSubmit={handleSubmit(onSubmit)}>
             <div className="flex flex-col gap-6">
               <div className="flex flex-col items-center text-center">
                 <h1 className="text-2xl font-bold">Welcome back</h1>
@@ -20,20 +41,43 @@ export function SignupForm({
                    Sign up to FitX
                 </p>
               </div>
+              <div className="grid grid-cols-2 gap-4">
+                <div className="grid gap-3">
+                <Label htmlFor="FirstName">First name</Label>
+                <Input
+                  type="text"
+                  placeholder="john"
+                  required
+                  {...register('firstName')}
+                />
+                {errors.firstName && <p className="text-red-400 text-xs">{errors.firstName.message}</p>}
+              </div>
+              <div className="grid gap-3">
+                <Label htmlFor="LastName">Last name</Label>
+                <Input
+                  type="text"
+                  placeholder="doe"
+                  {...register('lastName')}
+                />
+                {errors.lastName && <p className="text-red-400 text-xs">{errors.lastName.message}</p>}
+              </div>
+              </div>
               <div className="grid gap-3">
                 <Label htmlFor="email">Email</Label>
                 <Input
-                  id="email"
                   type="email"
-                  placeholder="m@example.com"
+                  placeholder="john@example.com"
                   required
+                  {...register('email')}
                 />
+                {errors.email && <p className="text-red-400 text-xs">{errors.email.message}</p>}
               </div>
               <div className="grid gap-3">
                 <div className="flex items-center">
                   <Label htmlFor="password">Password</Label>
                 </div>
-                <Input id="password" type="password" required />
+                <Input id="password" type="password" required  {...register('password')}/>
+                {errors.password && <p className="text-red-400 text-xs" >{errors.password.message}</p>}
               </div>
               <Button type="submit" className="w-full cursor-pointer">
                 Sign up
@@ -80,7 +124,7 @@ export function SignupForm({
               </div>
             </div>
           </form>
-          <div className="bg-muted relative hidden md:block">
+          <div className="bg-gray-300 relative hidden md:block">
             <img
               src="/placeholder.svg"
               alt="Image"
