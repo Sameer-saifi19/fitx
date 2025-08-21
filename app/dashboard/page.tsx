@@ -9,6 +9,9 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
+import { DialogOpen } from "./new-note";
+import { Button } from "@/components/ui/button";
+import { prisma } from "@/lib/prisma";
 
 type Note = {
   id: string; // Prisma uses string (cuid) by default
@@ -51,6 +54,7 @@ export default function NotesList() {
 
   return (
     <div className="flex gap-8 m-10">
+      <DialogOpen />
       {notes.map((note) => (
         <Card key={note.id}>
           <CardHeader>
