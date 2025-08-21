@@ -161,12 +161,15 @@ exports.Prisma.VerificationTokenScalarFieldEnum = {
   expires: 'expires'
 };
 
-exports.Prisma.NoteScalarFieldEnum = {
+exports.Prisma.MemberScalarFieldEnum = {
   id: 'id',
-  title: 'title',
-  desc: 'desc',
-  image: 'image',
-  userId: 'userId',
+  firstName: 'firstName',
+  lastName: 'lastName',
+  email: 'email',
+  phone: 'phone',
+  dateOfBirth: 'dateOfBirth',
+  gender: 'gender',
+  joinDate: 'joinDate',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
 };
@@ -185,14 +188,18 @@ exports.Prisma.NullsOrder = {
   first: 'first',
   last: 'last'
 };
-
+exports.Gender = exports.$Enums.Gender = {
+  MALE: 'MALE',
+  FEMALE: 'FEMALE',
+  OTHER: 'OTHER'
+};
 
 exports.Prisma.ModelName = {
   User: 'User',
   Account: 'Account',
   Session: 'Session',
   VerificationToken: 'VerificationToken',
-  Note: 'Note'
+  Member: 'Member'
 };
 
 /**

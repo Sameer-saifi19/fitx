@@ -45,7 +45,7 @@ export default function Signin() {
     }
 
     if (result?.ok) {
-      router.push('/dashboard')
+      router.push('/admin/dashboard')
     }
   }
   return (
@@ -57,7 +57,7 @@ export default function Signin() {
             Welcome back ! Please sign in to Continue
           </CardDescription>
           <div className="grid mt-4">
-            <Button variant="outline" type="submit" onClick={() => signIn('google', { callbackUrl: "/dashboard" })} className="w-full gap-3 flex">
+            <Button variant="outline" type="submit" onClick={() => signIn('google', { callbackUrl: "/admin/dashboard" })} className="w-full gap-3 flex">
               Sign in with Google
             </Button>
           </div>
@@ -94,7 +94,7 @@ export default function Signin() {
                 <div className="flex items-center">
                   <Label htmlFor="password">Password</Label>
                   <a
-                    href="/admin/auth/password-reset"
+                    href="/auth/password-reset"
                     className="ml-auto inline-block text-sm underline-offset-4 hover:underline"
                   >
                     Forgot your password?
